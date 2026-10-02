@@ -45,4 +45,4 @@ INSERT INTO spells (schoolID, spellName, spellLevel, castingTime, suppliesNeeded
 (2, 'Dimension Doorway', 4, '1 Action', 'Key cast from brass and starlight', 1, 'doorway.jpg'),
 (3, 'Echo of Chronos', 5, '10 Minutes', 'Hourglass filled with crushed pearls', 0, 'chronos.jpg'),
 (5, 'Prismatic Cascade', 6, '1 Action', 'Polished quartz sphere', 1, 'cascade.jpg'),
-(9, 'Interdimensional Summoner', 7, '3 Days', 'Polished quartz sphere', 1, 'summoner.jpg');
+(2, 'Interdimensional Summoner', 9, '3 Days', 'Polished quartz sphere', 1, 'summoner.jpg');
