@@ -1,6 +1,33 @@
 <?php
+// Function to delete old image files if they are not placeholders
+function deleteOldSpellImages($fileName, $targetDirectory = 'images/') {
+    if (empty($fileName)) {
+        return;
+    }
+
+    // Do NOT delete placeholder images
+    if (stripos($fileName, 'placeholder') !== false) {
+        return;
+    }
+
+    $fileInfo = pathinfo($fileName);
+    $baseName = $fileInfo['filename'];
+    $extension = isset($fileInfo['extension']) ? '.' . $fileInfo['extension'] : '';
+
+    $filesToDelete = [
+        $targetDirectory . $fileName,
+        $targetDirectory . $baseName . '_100' . $extension,
+        $targetDirectory . $baseName . '_400' . $extension
+    ];
+
+    foreach ($filesToDelete as $file) {
+        if (file_exists($file) && is_file($file)) {
+            unlink($file);
+        }
+    }
+}
+
 function processImageUpload($fileInputName, $targetDirectory = 'images/') {
-    // Check if a file was uploaded without errors
     if (!isset($_FILES[$fileInputName]) || $_FILES[$fileInputName]['error'] === UPLOAD_ERR_NO_FILE) {
         return 'placeholder.jpg';
     }
@@ -18,7 +45,6 @@ function processImageUpload($fileInputName, $targetDirectory = 'images/') {
         throw new Exception('Invalid file type. Please upload a JPG, PNG, or GIF.');
     }
 
-    // Generate a unique base name
     $baseName = 'spell_' . time() . '_' . bin2hex(random_bytes(4));
     $storedFileName = $baseName . '.' . $fileExtension;
 
@@ -30,7 +56,6 @@ function processImageUpload($fileInputName, $targetDirectory = 'images/') {
         throw new Exception('Could not move uploaded image file.');
     }
 
-    // Resize to 100px thumbnail and 400px detail image
     resizeImage($originalTargetPath, $target100Path, 100, 100);
     resizeImage($originalTargetPath, $target400Path, 400, 400);
 
@@ -54,14 +79,12 @@ function resizeImage($sourceFile, $destinationFile, $maxWidth, $maxHeight) {
             return false;
     }
 
-    // Calculate aspect ratio
     $ratio = min($maxWidth / $origWidth, $maxHeight / $origHeight);
     $newWidth = (int) round($origWidth * $ratio);
     $newHeight = (int) round($origHeight * $ratio);
 
     $virtualImage = imagecreatetruecolor($newWidth, $newHeight);
 
-    // Preserve transparency for PNG and GIF
     if ($imageType === IMAGETYPE_PNG || $imageType === IMAGETYPE_GIF) {
         imagecolortransparent($virtualImage, imagecolorallocatealpha($virtualImage, 0, 0, 0, 127));
         imagealphablending($virtualImage, false);

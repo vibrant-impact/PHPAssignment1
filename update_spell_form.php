@@ -1,9 +1,4 @@
 <?php
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once('database.php');
 
 $spellID = filter_input(INPUT_POST, 'spellID', FILTER_VALIDATE_INT);
@@ -17,7 +12,6 @@ if (!$spellID) {
     exit();
 }
 
-// Fetch spell
 $querySpell = 'SELECT * FROM spells WHERE spellID = :spellID';
 $stmtSpell = $db->prepare($querySpell);
 $stmtSpell->bindValue(':spellID', $spellID, PDO::PARAM_INT);
@@ -31,7 +25,6 @@ if (!$spell) {
     exit();
 }
 
-// Fetch schools for dropdown
 $querySchools = 'SELECT * FROM schools ORDER BY schoolName ASC';
 $stmtSchools = $db->prepare($querySchools);
 $stmtSchools->execute();
@@ -94,7 +87,7 @@ include('header.php');
                 $thumb = 'images/' . $fileInfo['filename'] . '_100.' . $fileInfo['extension'];
                 if (!file_exists($thumb)) $thumb = 'images/placeholder_100.jpg';
             ?>
-            <img src="<?php echo htmlspecialchars($thumb); ?>" alt="Current image" class="table-thumb">
+            <img id="sigilPreview" src="<?php echo htmlspecialchars($thumb); ?>" alt="Current Sigil" class="table-thumb">
         </div>
 
         <div class="form-group">
@@ -108,5 +101,22 @@ include('header.php');
         </div>
     </form>
 </main>
+
+<script>
+// Live thumbnail update when a new file is picked
+const spellImageInput = document.getElementById('spellImage');
+const sigilPreview = document.getElementById('sigilPreview');
+
+spellImageInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            sigilPreview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>
 
 <?php include('footer.php'); ?>

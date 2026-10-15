@@ -1,9 +1,4 @@
 <?php
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once('database.php');
 require_once('image_util.php');
 
@@ -23,9 +18,11 @@ if (!$spellID || empty($spellName) || !$schoolID || $spellLevel === false || $sp
 }
 
 try {
-    // If a new image was chosen, upload it; otherwise keep current image
+    // Check if user uploaded a replacement image
     if (isset($_FILES['spellImage']) && $_FILES['spellImage']['error'] !== UPLOAD_ERR_NO_FILE) {
         $imageFile = processImageUpload('spellImage');
+        // Delete previous custom images to avoid orphaned files
+        deleteOldSpellImages($currentImage);
     } else {
         $imageFile = $currentImage ?: 'placeholder.jpg';
     }

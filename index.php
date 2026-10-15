@@ -43,11 +43,17 @@ include('header.php');
             ?>
                 <tr>
                     <td>
-                        <img src="<?php echo htmlspecialchars($thumbPath); ?>" 
-                             alt="<?php echo htmlspecialchars($spell['spellName']); ?>" 
-                             class="table-thumb">
+                        <a href="spell_details.php?spellID=<?php echo htmlspecialchars($spell['spellID']); ?>">
+                            <img src="<?php echo htmlspecialchars($thumbPath); ?>" 
+                                alt="<?php echo htmlspecialchars($spell['spellName']); ?>" 
+                                class="table-thumb">
+                        </a>
                     </td>
-                    <td><strong><?php echo htmlspecialchars($spell['spellName']); ?></strong></td>
+                    <td>
+                        <a href="spell_details.php?spellID=<?php echo htmlspecialchars($spell['spellID']); ?>" class="spell-link">
+                            <strong><?php echo htmlspecialchars($spell['spellName']); ?></strong>
+                        </a>
+                    </td>
                     <td><span class="school-pill"><?php echo htmlspecialchars($spell['schoolName']); ?></span></td>
                     <td><?php echo htmlspecialchars($spell['spellLevel']); ?></td>
                     <td><?php echo htmlspecialchars($spell['castingTime']); ?></td>
