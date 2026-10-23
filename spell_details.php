@@ -15,10 +15,11 @@ if (!$spellID) {
 $query = 'SELECT spells.*, schools.schoolName, schools.schoolDescription 
           FROM spells 
           INNER JOIN schools ON spells.schoolID = schools.schoolID 
-          WHERE spells.spellID = :spellID';
+          WHERE spells.spellID = :spellID AND spells.userID = :userID';
 
 $statement = $db->prepare($query);
 $statement->bindValue(':spellID', $spellID, PDO::PARAM_INT);
+$statement->bindValue(':userID', $_SESSION['userID'], PDO::PARAM_INT);
 $statement->execute();
 $spell = $statement->fetch(PDO::FETCH_ASSOC);
 $statement->closeCursor();

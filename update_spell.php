@@ -35,7 +35,7 @@ try {
                   suppliesNeeded = :suppliesNeeded,
                   isAvailable = :isAvailable,
                   imageFile = :imageFile
-              WHERE spellID = :spellID';
+              WHERE spellID = :spellID AND userID = :userID';
 
     $statement = $db->prepare($query);
     $statement->bindValue(':schoolID', $schoolID, PDO::PARAM_INT);
@@ -46,7 +46,7 @@ try {
     $statement->bindValue(':isAvailable', $isAvailable, PDO::PARAM_INT);
     $statement->bindValue(':imageFile', $imageFile);
     $statement->bindValue(':spellID', $spellID, PDO::PARAM_INT);
-
+    $statement->bindValue(':userID', $_SESSION['userID'], PDO::PARAM_INT);
     $statement->execute();
     $statement->closeCursor();
 

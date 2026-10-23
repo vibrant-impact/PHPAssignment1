@@ -18,10 +18,11 @@ if (empty($spellName) || !$schoolID || $spellLevel === false || $spellLevel === 
 try {
     $imageFile = processImageUpload('spellImage');
 
-    $query = 'INSERT INTO spells (schoolID, spellName, spellLevel, castingTime, suppliesNeeded, isAvailable, imageFile)
-              VALUES (:schoolID, :spellName, :spellLevel, :castingTime, :suppliesNeeded, :isAvailable, :imageFile)';
+    $query = 'INSERT INTO spells (userID, schoolID, spellName, spellLevel, castingTime, suppliesNeeded, isAvailable, imageFile)
+              VALUES (:userID, :schoolID, :spellName, :spellLevel, :castingTime, :suppliesNeeded, :isAvailable, :imageFile)';
     
     $statement = $db->prepare($query);
+    $statement->bindValue(':userID', $userID, PDO::PARAM_INT);
     $statement->bindValue(':schoolID', $schoolID, PDO::PARAM_INT);
     $statement->bindValue(':spellName', $spellName);
     $statement->bindValue(':spellLevel', $spellLevel, PDO::PARAM_INT);
